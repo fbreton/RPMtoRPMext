@@ -1,3 +1,12 @@
+
+#=== Streamstep Integration Server: BRPM ===#
+# [integration_id=3]
+SS_integration_dns = "http://localhost:8080/brpm/v1"
+SS_integration_username = "apikiey"
+SS_integration_password = "-private-"
+SS_integration_details = ""
+SS_integration_password_enc = "__SS__Cj09QU15TXpZaFJUTTBFVE14QVROa1p6TnpRV1psWldZM1lETmhSR00ySW1Nd1VqWTJjek4yTW1Z"
+#=== End ===#
 require 'yaml'
 require 'uri'
 require 'rest-client'
