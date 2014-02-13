@@ -35,3 +35,8 @@ Improvements
 ============
 
 Removed dependency on curl
+
+To-Do
+=====
+
+Provide option from resource automations to take [Default], and add option for Application.

@@ -34,6 +34,16 @@
 #   position: A1:F1
 ###
 
+
+#=== Streamstep Integration Server: BRPM ===#
+# [integration_id=3]
+SS_integration_dns = "http://localhost:8080/brpm/v1"
+SS_integration_username = "apikiey"
+SS_integration_password = "-private-"
+SS_integration_details = ""
+SS_integration_password_enc = "__SS__Cj09QU15TXpZaFJUTTBFVE14QVROa1p6TnpRV1psWldZM1lETmhSR00ySW1Nd1VqWTJjek4yTW1Z"
+#=== End ===#
+
 require 'active_support/all'
 require 'yaml'
 require 'uri'
@@ -94,16 +104,27 @@ response = RestClient::Request.new(
 hash_response=JSON.parse(response.to_str)
 coordinator_id = hash_response[0]["id"]
 
-request_doc_xml = "<request><name>#{req_name}</name><deployment_coordinator_id>#{coordinator_id}</deployment_coordinator_id><requestor_id>#{requestor_id}</requestor_id><template_name>#{req_temp_name}</template_name><environment>#{env}</environment>#{start_req}<plan_member_attributes><plan_id>#{plan_id}</plan_id><plan_stage_id>#{stage_id}</plan_stage_id></plan_member_attributes></request>"
 url = "#{RPM_BASE_URL}/requests?token=#{RPM_TOKEN}"
-response = RestClient::Request.new(
-  :method => :post,
-  :url => url,
-  :user => SS_integration_username,
-  :password => decrypt_string_with_prefix(SS_integration_password_enc),
-  :headers => { :accept => :json, :content_type => "text/xml" },
-  :payload => request_doc_xml
-).execute
+
+response = RestClient.post(url, 
+  {
+    "request" => 
+    {
+      "name" => req_name,
+      "deployment_coordinator_id" => coordinator_id,
+      "requestor_id" => requestor_id,
+      "template_name" => req_temp_name,
+      "environment" => env,
+      "execute_now" => "true",
+      "plan_member_attributes" => 
+      {
+        "plan_id" => plan_id,
+        "plan_stage_id" => stage_id
+      }
+    }
+  }, :accept => :json
+)
+
 hash_response=JSON.parse(response.to_str)
 
 req_id = 1000 + hash_response["id"]
